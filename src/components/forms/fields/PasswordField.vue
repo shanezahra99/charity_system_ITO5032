@@ -3,7 +3,7 @@
       <label v-if="label" :for="id">{{ label }}</label>
       <input
         :id="id"
-        type="email"
+        type="password"
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
@@ -14,16 +14,16 @@
   
   <script>
   export default {
-    name: 'EmailField',
+    name: 'PasswordField',
     props: {
       id: {
         type: String,
-        default: 'email'
+        default: 'password'
       },
       label: String,
       placeholder: {
         type: String,
-        default: 'Enter your email'
+        default: 'Enter your password'
       },
       modelValue: String
     },
@@ -32,5 +32,5 @@
   </script>
   
   <style>
-  @import './fieldStyles.css';
-  </style>
+@import './fieldStyles.css';
+</style>
