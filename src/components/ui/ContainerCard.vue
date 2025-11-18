@@ -18,5 +18,6 @@
     padding: 2rem;
     width: 60vw;
     height: 60vh;
+    color: black;
   }
   </style>

@@ -15,7 +15,7 @@
 <script>
 import ContainerCard from '../components/ui/ContainerCard.vue'
 import EmailField from '../components/forms/fields/emailField.vue'
-import PasswordField from '../components/forms/fields/passwordField.vue'
+import PasswordField from '../components/forms/fields/PasswordField.vue'
 import MainButton from '../components/ui/MainButton.vue'
 
 export default {
