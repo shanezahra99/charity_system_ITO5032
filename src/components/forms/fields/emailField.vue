@@ -1,36 +1,29 @@
 <template>
-    <div class="form-field">
-      <label v-if="label" :for="id">{{ label }}</label>
-      <input
-        :id="id"
-        type="email"
-        :placeholder="placeholder"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-        class="form-input"
-      />
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'EmailField',
-    props: {
-      id: {
-        type: String,
-        default: 'email'
-      },
-      label: String,
-      placeholder: {
-        type: String,
-        default: 'Enter your email'
-      },
-      modelValue: String
-    },
-    emits: ['update:modelValue']
-  }
-  </script>
-  
-  <style>
-  @import './fieldStyles.css';
-  </style>
+  <div class="form-field">
+    <input
+      type="email"
+      required
+      placeholder="Email"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      class="form-input"
+    />
+
+    <p v-if="error" class="error-message">{{ error }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'EmailField',
+  props: {
+    modelValue: String,
+    error: String
+  },
+  emits: ['update:modelValue']
+}
+</script>
+
+<style>
+@import './fieldStyles.css';
+</style>
