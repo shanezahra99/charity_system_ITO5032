@@ -1,4 +1,4 @@
-// firestore database
+// firestore database connection
 
 import app from './config.js'
 import { getFirestore } from 'firebase/firestore'

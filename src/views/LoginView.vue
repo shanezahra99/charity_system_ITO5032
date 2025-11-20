@@ -3,8 +3,9 @@
     <ContainerCard>
       <h1>Login</h1>
       <br><br>
-      <EmailField />
-      <PasswordField />
+      <EmailField v-model="email" :error="errors.email" />
+      <PasswordField v-model="password" :error="errors.password" />
+
       <MainButton @click="Login" variant="primary">Login</MainButton>
       <br><br>
       <MainButton @click="goToSignup" variant="secondary">Sign Up</MainButton>
@@ -17,6 +18,9 @@ import ContainerCard from '../components/ui/ContainerCard.vue'
 import EmailField from '../components/forms/fields/emailField.vue'
 import PasswordField from '../components/forms/fields/PasswordField.vue'
 import MainButton from '../components/ui/MainButton.vue'
+import { validateLoginForm } from '../utilities/validation.js'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase/auth.js'
 
 export default {
   name: 'LoginView',
@@ -26,10 +30,43 @@ export default {
     PasswordField,
     MainButton
   },
+
+  data() {
+    return {
+      email: '',
+      password: '',
+      errors: { // error messages
+        email: '',
+        password: ''
+      }
+    }
+  },
+
   methods: {
+
+    // validations
+    validateForm() {
+      const validation = validateLoginForm(this.email, this.password)
+      this.errors = validation.errors
+      return validation.isValid
+    },
+
     Login() {
-      console.log('Login button clicked')
-      this.$router.push('/')
+      // pre submission validation
+      if (!this.validateForm()) {
+        return
+      }
+
+      // if validation process passes
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          console.log('User Login Successful!', userCredential.user)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          console.log('Login error:', error.code)
+          alert('Login failed: ' + error.message)
+        })
     },
     goToSignup() {
       this.$router.push('/signup')
