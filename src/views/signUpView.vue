@@ -20,6 +20,7 @@ import MainButton from '../components/ui/MainButton.vue'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/auth.js'
 import { validateSignupForm } from '../utilities/validation.js'
+import { createUser } from '../firebase/firestore.js'
 
 export default {
   name: 'SignUpView',
@@ -58,9 +59,21 @@ export default {
       
       // if validation process passes
       createUserWithEmailAndPassword(auth, this.email, this.password)
-        .then((userCredential) => {
-          console.log('User Signup Successful!', userCredential.user)
-          this.$router.push('/')
+        .then(async (userCredential) => {
+          const user = userCredential.user
+          console.log('User Signup Successful!', user)
+          
+          // create a system user
+          try {
+            console.log('Creating user document...')
+            await createUser(user.uid, this.email, 'reporter')
+            console.log('User document created successfully')
+            this.$router.push('/')
+          } catch (error) {
+            console.error('Error creating user document:', error)
+            console.error('Error code:', error.code)
+            console.error('Error message:', error.message)
+          }
         })
         .catch((error) => {
           console.log('Sign Up error:', error.code)
