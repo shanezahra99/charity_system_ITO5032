@@ -65,12 +65,12 @@ export default {
           
           // create a system user
           try {
-            console.log('Creating user document...')
+            console.log('Creating user')
             await createUser(user.uid, this.email, 'reporter')
-            console.log('User document created successfully')
+            console.log('User created successfully')
             this.$router.push('/')
           } catch (error) {
-            console.error('Error creating user document:', error)
+            console.error('Error creating user:', error)
             console.error('Error code:', error.code)
             console.error('Error message:', error.message)
           }
