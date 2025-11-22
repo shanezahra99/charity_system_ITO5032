@@ -33,8 +33,8 @@ export default {
 
   data() {
     return {
-      email: '',
-      password: '',
+      email: 'admin9@ndis.com',
+      password: 'tester!',
       errors: { // error messages
         email: '',
         password: ''

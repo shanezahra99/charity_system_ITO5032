@@ -4,11 +4,12 @@
     <ContainerCard>
       <h2 style="text-align: center;">Report an event</h2>
 
-      <form>
-        <br></br>
+      <form @submit.prevent="recordSubmission">
         <SingleSelectField label="Event Type" :options="eventTypes" v-model="eventType" />
+        <DateField label="Event Date" v-model="eventDate" />
+        <TextAreaField placeholder="Event Description" v-model="eventDescription" />
+        <MainButton @click="recordSubmission" variant="primary">Record Submission</MainButton>
       </form>
-
 
     </ContainerCard>
   </div>
@@ -18,16 +19,25 @@
 import SingleSelectField from '@/components/forms/fields/SingleSelectField.vue';
 import ContainerCard from '../components/ui/ContainerCard.vue'
 import NavBar from '../components/ui/NavBar.vue'
+import DateField from '../components/forms/fields/DateField.vue'
+import MainButton from '../components/ui/MainButton.vue'
+import TextAreaField from '../components/forms/fields/TextAreaField.vue'
+import { createEvent } from '../firebase/firestore.js'
+import { auth } from '../firebase/auth.js'
+
 
 export default {
   name: 'ReportEventView',
   components: {
     ContainerCard,
     NavBar,
-    SingleSelectField
+    SingleSelectField,
+    DateField,
+    MainButton,
+    TextAreaField
   },
 
-  /** this field data will need to come from database??? **/
+
   data() {
     return {
       eventType: '',
@@ -35,10 +45,36 @@ export default {
         { label: 'Incident', value: 'Incident' },
         { label: 'Near Miss', value: 'Near Miss' },
         { label: 'Hazard', value: 'Hazard' }
-      ]
+      ],
+      eventDate: '',
+      eventDescription: ''
+    }
+  },
+  methods: {
+      async recordSubmission() {
+        const currentUser = auth.currentUser
+        
+        const eventData = {
+          eventType: this.eventType,
+          date: this.eventDate,
+          description: this.eventDescription,
+          reporterEmail: currentUser?.email || '', // auto populating who reported via users email
+          reporterId: currentUser?.uid || '' // auto populating who reported via users uid
+        }
+
+        try {
+          const eventId = await createEvent(eventData)
+          console.log('Event created successfully:', eventId)
+          alert('Event reported successfully!')
+          this.$router.push('/')
+        } catch (error) {
+          console.error('Error creating event:', error)
+          alert('Failed to report event: ' + error.message)
+        }
+      }
     }
   }
-}
+
 </script>
 
 <style scoped>

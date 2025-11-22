@@ -2,7 +2,8 @@
   <NavBar></NavBar>
     <div class="event-dashboard-page">
     <ContainerCard>
-      <h2 style="text-align: center;">Events</h2>
+      <p>Welcome {{ user.email || 'User' }}! <br>You are a <span style="color: var(--vt-c-primary);">{{ user.role }}</span></p>
+      <h2 style="text-align: center;">Events</h2> 
       <Status name="New records" :count="totalEvents" />
       <Status name="Under Review" :count="pendingEvents" /> 
       <Status name="Completed Closed" :count="approvedEvents" />
@@ -16,14 +17,40 @@
 import ContainerCard from '../components/ui/ContainerCard.vue'
 import NavBar from '../components/ui/NavBar.vue'
 import Status from '../components/ui/status.vue'
+import { auth } from '../firebase/auth.js'
+import { getUser } from '../firebase/users.js'
 
 export default {
   name: 'EventDashboardView',
   components: {
     ContainerCard,
     NavBar,
-    Status
+    Status,
   },
+
+  data() {
+    return {
+      user: {
+        email: '',
+        role: ''
+      }
+    }
+  },
+
+  mounted() { //using mounted to ensure compoennt has loaded and authenticated
+
+    const currentUser = auth.currentUser // checks if the current user is authenticated
+
+    if (currentUser) {
+      getUser(currentUser.uid).then((user) => { // grabs user data from firestore
+        if (user) {
+          this.user.email = user.email
+          this.user.role = user.role
+        }
+      })
+    }
+  },
+
   methods: {
     navigateToReportEvent() {
       this.$router.push('/events/report')
