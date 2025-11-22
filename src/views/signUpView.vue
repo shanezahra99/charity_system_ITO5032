@@ -20,7 +20,7 @@ import MainButton from '../components/ui/MainButton.vue'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/auth.js'
 import { validateSignupForm } from '../utilities/validation.js'
-import { createUser } from '../firebase/firestore.js'
+import { createUser } from '../firebase/users.js'
 
 export default {
   name: 'SignUpView',
